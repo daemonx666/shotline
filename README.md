@@ -4,9 +4,13 @@ Windows 截图暂存工具。图片挂在顶部绳线上，指针停留后展开
 
 C# + .NET 10 + WPF。兼容目标为 Windows 10 **22H2 x64** 和 Windows 11 x64，共用一份包含运行时的便携 ZIP。功能源码、行为测试和 Windows 构建工作流已提供；实际验证记录见 [验收清单](docs/ACCEPTANCE.md)。构建成功不代表桌面交互已验收。
 
+[源码仓库](https://github.com/felix-xqs/shotline) · [Windows 构建与最新下载](https://github.com/felix-xqs/shotline/actions/workflows/windows.yml) · [首个已验证便携包](https://github.com/felix-xqs/shotline/actions/runs/37739587800/artifacts/11532784518)
+
+2026-10-08 的 Windows CI 已通过核心测试、Windows 解码/监听测试、Release 构建、自包含 ZIP 检查及隔离启动/退出检查。运行环境为 Windows Server 2025，Win10/Win11 真机交互仍未测。
+
 ## 使用
 
-1. 从仓库的 **Actions → Windows portable → 成功构建 → Artifacts** 下载 `Shotline-win-x64-提交号`。解开 Actions 下载包，再解开其中的 `Shotline-1.0.0-win-x64.zip`。
+1. 从仓库的 **Actions → Windows portable → 成功构建 → Artifacts** 下载 `Shotline-win-x64-提交号`，下载需登录 GitHub，产物保留 30 天。解开 Actions 下载包，再解开其中的 `Shotline-1.0.0-win-x64.zip`。
 2. 将整个 `Shotline` 文件夹放到稳定位置，双击 `Shotline.exe`。无需另装 .NET，首次运行默认不开机启动、不开启剪贴板导入。
 3. 从托盘打开“设置与运行状态”，确认实际监听目录。默认尝试 Windows 截图已知目录，否则使用图片目录下的 `Screenshots`；目录不存在会明确显示未监听。不会修改截图工具、OneDrive 或系统截图快捷键。
 4. 使用现有截图方式。`Win+Shift+S` 等只向剪贴板写图片的来源需要主动开启剪贴板图片导入。此模式也会接收普通复制图片；开启时不读取已有剪贴板内容。

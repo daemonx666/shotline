@@ -10,12 +10,20 @@
 | 构建发布脚本语法 | PowerShell 7.6.6 三个脚本解析通过；图标生成与 Python 语法检查通过 |
 | 自包含发布预检 | macOS 跨平台 `win-x64` 发布成功，266 个运行文件，约 154 MiB，x64 PE / WPF / .NET 运行时均存在；无需已安装运行时 |
 | 本地 ZIP 脚本打包 | `scripts/publish.ps1 -SkipLaunchCheck` 实跑成功，18 项必需文件检查通过，包含项目/.NET/WPF 许可；仅是 macOS 跨平台产物，不是 Windows 启动证据 |
-| Windows CI 解码/监听测试 | 待推送后实际运行，工作流创建不算成功 |
-| Windows 自包含 ZIP 及隔离启动 | 待 CI 实际生成并验证，源码目录不存放产物 |
+| Windows CI Release 与自动测试 | 2026-10-08，[构建 37739587800](https://github.com/felix-xqs/shotline/actions/runs/37739587800) 成功；Windows Server 2025 Datacenter `10.0.26100`，SDK 10.0.401；四个工程 0 警告 / 0 错误，核心 14/14、Windows 解码/监听/快捷键测试通过 |
+| Windows 自包含 ZIP 及隔离启动 | 同一 CI 实际生成 `Shotline-1.0.0-win-x64.zip`；18 项必需文件、x64 PE、无需已安装框架检查通过；解压后隔离启动并正常退出；下载后的 SHA-256 复核一致 |
 | Windows 10 22H2 真机交互 | 未执行 |
 | Windows 11 真机交互 | 未执行 |
 
 CI 不执行 `--desktop`；可选桌面自动检查也不能代替下表人工验收。未填写的测试一律为未验收。
+
+以上 Windows 证据固定对应程序提交 `3289d8826969b9918f95e5c78b7c55e0060e7b00`，Runner 镜像为 `windows-2025-vs2026` / `20260925.250.1`。便携 ZIP 为 76,211,278 字节，SHA-256：
+
+```text
+ae0629f82a1369bb4582b166f90df6522b67b077f4ba5643c033237b37060848
+```
+
+[下载该次 CI 产物](https://github.com/felix-xqs/shotline/actions/runs/37739587800/artifacts/11532784518)（需登录 GitHub，保留至 2026-11-07）；[最新构建及产物](https://github.com/felix-xqs/shotline/actions/workflows/windows.yml)。外层 Actions 下载包内含便携 ZIP、校验和与构建信息，源码库不存放二进制。隔离启动使用临时状态，关闭剪贴板导入及目录监听，不能证明实际截图来源、复制、拖放或全屏交互通过。
 
 本地已验证状态路径去重、跨来源像素事件合并、移除后重复抑制、保留源文件的容量淘汰、重命名 ID、12 张恢复、失效路径、自身复制策略、拖放结果条件、配置恢复、损坏主文件/备份及首次写入临时文件保留。剪贴板策略测试是数据层测试，不是实际 Windows 剪贴板验收。
 
