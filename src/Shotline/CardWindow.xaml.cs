@@ -6,7 +6,7 @@ internal partial class CardWindow : Window
     internal CardViewModel Model { get; }
     private readonly DispatcherTimer hold = new(), click = new(), feedbackTimer = new();
     private Point? down;
-    private bool consumed, falling;
+    private bool consumed, falling, copying, dragging, menuOpen, closed;
     private Native.Monitor? monitor;
     private int screenX, screenY;
     internal CardWindow(AppController controller, CardViewModel model)
@@ -20,7 +20,12 @@ internal partial class CardWindow : Window
             hold.Stop(); consumed = true; EndPress(); controller.Edit(Model); Nudge();
         };
         click.Interval = TimeSpan.FromMilliseconds(Native.GetDoubleClickTime() + 15);
-        click.Tick += async (_, _) => { click.Stop(); if (!falling && await controller.CopyAsync(Model)) FeedbackSuccess(); };
+        click.Tick += async (_, _) =>
+        {
+            click.Stop(); copying = true; UpdateInteraction();
+            try { if (!falling && await controller.CopyAsync(Model)) FeedbackSuccess(); }
+            finally { copying = false; UpdateInteraction(); }
+        };
         feedbackTimer.Interval = TimeSpan.FromMilliseconds(1100);
         feedbackTimer.Tick += (_, _) => { feedbackTimer.Stop(); Feedback.Visibility = Visibility.Collapsed; };
         Card.MouseEnter += (_, _) => { RemoveButton.Opacity = 1; };
@@ -33,12 +38,12 @@ internal partial class CardWindow : Window
         Card.ContextMenu = Menu();
         Card.ContextMenuOpening += (_, _) =>
         {
-            click.Stop(); EndPress(); controller.Presenter.SetInteraction(this, true);
+            click.Stop(); EndPress(); menuOpen = true; UpdateInteraction();
             if (Card.ContextMenu.Items.OfType<MenuItem>().LastOrDefault() is MenuItem recycle)
                 recycle.Header = Model.Item.Managed ? "将管理副本移到回收站…" : "将外部源文件移到回收站…";
         };
-        Card.ContextMenuClosing += (_, _) => controller.Presenter.SetInteraction(this, false);
-        Closed += (_, _) => { hold.Stop(); click.Stop(); feedbackTimer.Stop(); controller.Presenter.SetInteraction(this, false); };
+        Card.ContextMenuClosing += (_, _) => { menuOpen = false; UpdateInteraction(); };
+        Closed += (_, _) => { closed = true; hold.Stop(); click.Stop(); feedbackTimer.Stop(); UpdateInteraction(); };
     }
     private bool OnCloseButton(MouseEventArgs e)
     {
@@ -53,18 +58,18 @@ internal partial class CardWindow : Window
     private void Down(object sender, MouseButtonEventArgs e)
     {
         if (OnCloseButton(e) || falling) return;
-        e.Handled = true; consumed = false;
+        e.Handled = true; consumed = false; click.Stop();
         if (e.ClickCount >= 2)
         { click.Stop(); consumed = true; EndPress(); controller.Open(Model); return; }
         down = e.GetPosition(Card); Card.CaptureMouse(); hold.Start();
-        controller.Presenter.SetInteraction(this, true);
+        UpdateInteraction();
     }
     private void Up(object sender, MouseButtonEventArgs e)
     {
         if (OnCloseButton(e)) return;
         var clicked = down is not null && !consumed;
         EndPress(); e.Handled = true;
-        if (clicked) { click.Stop(); click.Start(); }
+        if (clicked) { click.Stop(); click.Start(); UpdateInteraction(); }
     }
     private async void Move(object sender, MouseEventArgs e)
     {
@@ -73,7 +78,7 @@ internal partial class CardWindow : Window
         if (Math.Abs(current.X - start.X) < SystemParameters.MinimumHorizontalDragDistance &&
             Math.Abs(current.Y - start.Y) < SystemParameters.MinimumVerticalDragDistance) return;
         consumed = true; click.Stop(); EndPress();
-        controller.Presenter.SetInteraction(this, true);
+        dragging = true; UpdateInteraction();
         Card.Opacity = 0.55;
         try
         {
@@ -87,10 +92,12 @@ internal partial class CardWindow : Window
         }
         catch (Exception ex) when (ex is ExternalException or InvalidOperationException or IOException)
         { controller.Diagnostics.Fail("drag.failed", "拖放失败，卡片保留。", ex, Model.Id); Nudge(); }
-        finally { Card.Opacity = 1; controller.Presenter.SetInteraction(this, false); }
+        finally { Card.Opacity = 1; dragging = false; UpdateInteraction(); }
     }
     private void EndPress()
-    { hold.Stop(); down = null; if (Card.IsMouseCaptured) Card.ReleaseMouseCapture(); controller.Presenter.SetInteraction(this, false); }
+    { hold.Stop(); down = null; if (Card.IsMouseCaptured) Card.ReleaseMouseCapture(); UpdateInteraction(); }
+    private void UpdateInteraction() => controller.Presenter.SetInteraction(this,
+        !falling && !closed && (down is not null || click.IsEnabled || copying || dragging || menuOpen));
     private ContextMenu Menu()
     {
         var menu = new ContextMenu();
@@ -130,7 +137,7 @@ internal partial class CardWindow : Window
     }
     internal void Retract()
     {
-        EndPress(); feedbackTimer.Stop(); Feedback.Visibility = Visibility.Collapsed;
+        click.Stop(); EndPress(); feedbackTimer.Stop(); Feedback.Visibility = Visibility.Collapsed;
         Tilt.BeginAnimation(RotateTransform.AngleProperty, null);
         Shift.BeginAnimation(TranslateTransform.YProperty, null);
         if (!IsVisible) return;

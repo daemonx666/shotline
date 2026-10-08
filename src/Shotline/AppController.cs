@@ -40,7 +40,7 @@ internal sealed class AppController : IAsyncDisposable
         try
         {
             var loaded = await Task.Run(() => store.LoadAsync()); state = loaded.State;
-            Diagnostics.Persistence = loaded.Recovered ? "从备份恢复，原文件保留" : "已加载";
+            Diagnostics.Persistence = loaded.Recovered ? "已恢复状态，原文件保留" : "已加载";
             if (loaded.Warning is not null) Diagnostics.Fail("state.recover", loaded.Warning, new InvalidDataException(loaded.Warning));
         }
         catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or InvalidDataException)

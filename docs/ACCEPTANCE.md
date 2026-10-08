@@ -9,6 +9,7 @@
 | macOS 跨平台 Release 构建 | 2026-10-08，完整 `scripts/build.ps1` 实跑，四个工程编译成功，0 警告 / 0 错误；不代表 Windows 应用已运行 |
 | 构建发布脚本语法 | PowerShell 7.6.6 三个脚本解析通过；图标生成与 Python 语法检查通过 |
 | 自包含发布预检 | macOS 跨平台 `win-x64` 发布成功，266 个运行文件，约 154 MiB，x64 PE / WPF / .NET 运行时均存在；无需已安装运行时 |
+| 本地 ZIP 脚本打包 | `scripts/publish.ps1 -SkipLaunchCheck` 实跑成功，18 项必需文件检查通过，包含项目/.NET/WPF 许可；仅是 macOS 跨平台产物，不是 Windows 启动证据 |
 | Windows CI 解码/监听测试 | 待推送后实际运行，工作流创建不算成功 |
 | Windows 自包含 ZIP 及隔离启动 | 待 CI 实际生成并验证，源码目录不存放产物 |
 | Windows 10 22H2 真机交互 | 未执行 |
