@@ -1,0 +1,43 @@
+<Window x:Class="Shotline.CardWindow"
+        x:ClassModifier="internal"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Width="190" Height="220" WindowStyle="None" AllowsTransparency="True"
+        Background="Transparent" ShowInTaskbar="False" ShowActivated="False" Topmost="True"
+        ResizeMode="NoResize" Focusable="False">
+  <Canvas x:Name="Stage" Background="{x:Null}">
+    <Grid x:Name="Card" Width="156" Canvas.Left="17" Canvas.Top="8"
+          RenderTransformOrigin="0.5,0.03" ToolTip="{Binding Help}" Cursor="Hand">
+      <Grid.RenderTransform>
+        <TransformGroup><RotateTransform x:Name="Tilt"/><TranslateTransform x:Name="Shift"/></TransformGroup>
+      </Grid.RenderTransform>
+      <Border Margin="0,16,0,0" Background="{DynamicResource Surface}" CornerRadius="9"
+              BorderBrush="{DynamicResource Edge}" BorderThickness="1" Padding="6,9,6,7">
+        <Border.Effect><DropShadowEffect BlurRadius="12" ShadowDepth="4" Opacity="0.20" /></Border.Effect>
+        <StackPanel>
+          <Image Source="{Binding Thumbnail}" Width="142" Height="104" Stretch="Uniform"
+                 RenderOptions.BitmapScalingMode="HighQuality" IsHitTestVisible="False"/>
+          <TextBlock Text="{Binding FileName}" TextTrimming="CharacterEllipsis" TextWrapping="NoWrap"
+                     FontSize="10" Margin="3,7,3,0" IsHitTestVisible="False" />
+          <TextBlock Text="{Binding Details}" FontSize="9" Foreground="{DynamicResource Muted}"
+                     Margin="3,2,3,0" TextWrapping="NoWrap" IsHitTestVisible="False"/>
+        </StackPanel>
+      </Border>
+      <Border Width="11" Height="30" VerticalAlignment="Top" HorizontalAlignment="Center"
+              CornerRadius="3" Background="{DynamicResource Accent}" BorderBrush="{DynamicResource Edge}"
+              BorderThickness="0.5" IsHitTestVisible="False">
+        <Border Width="7" Height="2" Background="#70403020" VerticalAlignment="Top" Margin="0,10,0,0" />
+      </Border>
+      <Button x:Name="RemoveButton" Content="×" Width="25" Height="25" MinHeight="0" Padding="0"
+              Margin="-5,14,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"
+              FontSize="17" ToolTip="从晾图移除（保留文件）" Focusable="False" Opacity="0"
+              AutomationProperties.Name="从晾图移除，保留文件" />
+      <Border x:Name="Feedback" Visibility="Collapsed" VerticalAlignment="Center"
+              Background="{DynamicResource Surface}" CornerRadius="8" Padding="12,7"
+              HorizontalAlignment="Center" IsHitTestVisible="False" BorderThickness="1"
+              BorderBrush="{DynamicResource Accent}">
+        <TextBlock x:Name="FeedbackText" Text="已复制" Foreground="{DynamicResource Accent}" FontWeight="SemiBold" />
+      </Border>
+    </Grid>
+  </Canvas>
+</Window>

@@ -1,0 +1,10 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Shotline.Core/Shotline.Core.csproj" />
+    <Project Path="src/Shotline/Shotline.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Shotline.Tests/Shotline.Tests.csproj" />
+    <Project Path="tests/Shotline.WindowsTests/Shotline.WindowsTests.csproj" />
+  </Folder>
+</Solution>

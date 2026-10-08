@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+  <title>Shotline · 晾图原创图标</title>
+  <rect x="16" y="16" width="224" height="224" rx="54" fill="#183d35"/>
+  <path d="M24 55 Q128 77 232 55" fill="none" stroke="#dbbf79" stroke-width="4"/>
+  <g transform="rotate(-7 128 142)">
+    <rect x="56" y="87" width="147" height="128" rx="10" fill="#fff9e9"/>
+    <rect x="64" y="95" width="131" height="89" rx="4" fill="#a4c7c2"/>
+    <circle cx="174" cy="117" r="9" fill="#e6b15d"/>
+    <path d="M64 184 L94 139 L119 163 L146 129 L195 184 Z" fill="#327966"/>
+    <path d="M70 198 H135 M70 204 H108" stroke="#ced6c8" stroke-width="3" stroke-linecap="round"/>
+  </g>
+  <rect x="123" y="65" width="13" height="46" rx="4" fill="#e6b15d"/>
+  <path d="M126 77 H133" stroke="#725732" stroke-width="2"/>
+</svg>

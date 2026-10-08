@@ -1,0 +1,37 @@
+name: Windows portable
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Install .NET 10 SDK
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: '10.0.x'
+      - name: Build and behavior tests
+        shell: pwsh
+        run: ./scripts/build.ps1
+      - name: Self-contained win-x64 portable ZIP and startup check
+        shell: pwsh
+        run: ./scripts/publish.ps1
+      - name: Upload portable package and build evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: Shotline-win-x64-${{ github.sha }}
+          path: |
+            artifacts/**/Shotline-*-win-x64.zip
+            artifacts/**/Shotline-*-win-x64.zip.sha256
+            artifacts/**/build-info.json
+          if-no-files-found: error
+          retention-days: 30
