@@ -4,7 +4,7 @@ Windows 截图暂存工具。图片挂在顶部绳线上，指针停留后展开
 
 C# + .NET 10 + WPF。兼容目标为 Windows 10 **22H2 x64** 和 Windows 11 x64，共用一份包含运行时的便携 ZIP。功能源码、行为测试和 Windows 构建工作流已提供；实际验证记录见 [验收清单](docs/ACCEPTANCE.md)。构建成功不代表桌面交互已验收。
 
-[源码仓库](https://github.com/felix-xqs/shotline) · [Windows 构建与最新下载](https://github.com/felix-xqs/shotline/actions/workflows/windows.yml) · [首个已验证便携包](https://github.com/felix-xqs/shotline/actions/runs/37739587800/artifacts/11532784518)
+[源码仓库](https://github.com/daemonx666/shotline) · [Windows 构建与最新下载](https://github.com/daemonx666/shotline/actions/workflows/windows.yml) · [首个已验证便携包](https://github.com/daemonx666/shotline/actions/runs/37739587800/artifacts/11532784518)
 
 2026-10-08 的 Windows CI 已通过核心测试、Windows 解码/监听测试、Release 构建、自包含 ZIP 检查及隔离启动/退出检查。运行环境为 Windows Server 2025，Win10/Win11 真机交互仍未测。
 
